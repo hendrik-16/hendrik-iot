@@ -3,114 +3,206 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SKADUTA Smart Agriculture</title>
+  <title>SKADUTA Smart Agriculture - Dashboard</title>
   <!-- Library Chart.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
   <style>
     :root {
-      --bg-main: #1a232a;
-      --bg-sidebar: #13191d;
-      --bg-card: #202b33;
-      --accent-teal: #00c4b4;
-      --accent-orange: #f39c12;
-      --accent-red: #d94343;
-      --text-color: #ffffff;
-      --text-muted: #8b9da8;
+      --bg-dark: #060b26;
+      --bg-card: rgba(14, 21, 58, 0.7);
+      --bg-card-hover: rgba(20, 30, 80, 0.8);
+      --accent-blue: #0075ff;
+      --accent-cyan: #00f0ff;
+      --accent-purple: #7000ff;
+      --accent-orange: #ff9900;
+      --accent-red: #ff3366;
+      --text-main: #ffffff;
+      --text-muted: #8f9bba;
+      --border-color: rgba(255, 255, 255, 0.08);
+      --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
     }
 
     * {
       box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: var(--bg-main);
-      color: var(--text-color);
-      margin: 0;
+      font-family: 'Plus Jakarta Sans', 'Segoe UI', sans-serif;
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(0, 117, 255, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(112, 0, 255, 0.15) 0%, transparent 40%);
+      color: var(--text-main);
       display: flex;
-      flex-direction: row;
       min-height: 100vh;
+      overflow-x: hidden;
     }
 
-    /* Sidebar Responsif */
+    /* Sidebar Glassmorphism */
     .sidebar {
-      width: 250px;
-      background-color: var(--bg-sidebar);
-      padding: 20px;
+      width: 260px;
+      background: rgba(6, 11, 38, 0.85);
+      backdrop-filter: blur(20px);
+      border-right: 1px solid var(--border-color);
+      padding: 24px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       flex-shrink: 0;
+      z-index: 10;
     }
 
-    .logo {
-      font-size: 1.3rem;
-      font-weight: bold;
-      color: var(--accent-teal);
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
     }
 
-    .logo span {
-      display: block;
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+    }
+
+    .menu-list {
+      list-style: none;
+      margin-top: 35px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .menu-item a {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 16px;
+      color: var(--text-muted);
+      text-decoration: none;
+      border-radius: 12px;
       font-size: 0.9rem;
-      color: var(--text-color);
+      font-weight: 500;
+      transition: all 0.3s ease;
     }
 
-    /* Main Content */
-    .main-content {
+    .menu-item.active a, .menu-item a:hover {
+      background: linear-gradient(90deg, rgba(0, 117, 255, 0.2), transparent);
+      color: var(--text-main);
+      border-left: 3px solid var(--accent-cyan);
+    }
+
+    .sidebar-card {
+      background: linear-gradient(135deg, rgba(0, 117, 255, 0.3), rgba(112, 0, 255, 0.3));
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 16px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    /* Main Area */
+    .main-wrapper {
       flex: 1;
-      padding: 20px;
+      padding: 24px 30px;
       display: flex;
       flex-direction: column;
       gap: 20px;
       overflow-y: auto;
     }
 
-    .header {
+    /* Top Navbar */
+    .navbar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 1.2rem;
-      font-weight: bold;
-      flex-wrap: wrap;
-      gap: 10px;
     }
 
-    /* Grid Switch Relay Responsif */
-    .relay-container {
+    .status-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 153, 0, 0.15);
+      border: 1px solid rgba(255, 153, 0, 0.3);
+      padding: 6px 14px;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      color: var(--accent-orange);
+    }
+
+    .status-badge.connected {
+      background: rgba(0, 240, 255, 0.15);
+      border-color: rgba(0, 240, 255, 0.3);
+      color: var(--accent-cyan);
+    }
+
+    /* Cards Layout Grid */
+    .cards-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 15px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
     }
 
-    .relay-card {
-      background-color: var(--bg-card);
-      padding: 15px;
-      border-radius: 8px;
+    .glass-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: var(--glass-shadow);
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .glass-card:hover {
+      border-color: rgba(0, 240, 255, 0.3);
+    }
+
+    .stat-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
-    /* Toggle Switch */
+    .stat-icon {
+      width: 42px;
+      height: 42px;
+      background: rgba(0, 117, 255, 0.2);
+      color: var(--accent-cyan);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+    }
+
+    /* Switch Relay Styling */
     .switch {
       position: relative;
       display: inline-block;
-      width: 50px;
-      height: 26px;
-      flex-shrink: 0;
+      width: 46px;
+      height: 24px;
     }
 
-    .switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
+    .switch input { opacity: 0; width: 0; height: 0; }
 
     .slider {
       position: absolute;
       cursor: pointer;
       top: 0; left: 0; right: 0; bottom: 0;
-      background-color: var(--accent-red);
+      background-color: rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--border-color);
       transition: .3s;
       border-radius: 34px;
     }
@@ -118,85 +210,67 @@
     .slider:before {
       position: absolute;
       content: "";
-      height: 18px;
-      width: 18px;
-      left: 4px;
-      bottom: 4px;
-      background-color: white;
+      height: 16px;
+      width: 16px;
+      left: 3px;
+      bottom: 3px;
+      background-color: var(--text-muted);
       transition: .3s;
       border-radius: 50%;
     }
 
     input:checked + .slider {
-      background-color: var(--accent-teal);
+      background-color: var(--accent-blue);
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
     }
 
     input:checked + .slider:before {
-      transform: translateX(24px);
+      transform: translateX(22px);
+      background-color: #fff;
     }
 
-    /* Grid Dashboard Utama */
-    .dashboard-grid {
+    /* Main Section Grid */
+    .dashboard-main-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      grid-template-columns: 2fr 1fr;
       gap: 20px;
     }
 
-    /* Kartu Grafik (Agak Lebar) */
-    .chart-card {
-      grid-column: span 2;
+    .chart-container {
+      position: relative;
+      width: 100%;
+      height: 280px;
+      margin-top: 15px;
     }
 
-    .data-card {
-      background-color: var(--bg-card);
-      border-radius: 10px;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .card-title {
-      font-size: 1rem;
-      font-weight: 600;
-      margin-bottom: 15px;
-      color: var(--text-muted);
-    }
-
-    /* Gauge / Inisialisasi Meter */
-    .gauge-container {
+    /* Gauge Arc Cards */
+    .gauges-flex {
       display: flex;
       justify-content: space-around;
       align-items: center;
-      flex-wrap: wrap;
-      gap: 15px;
+      margin-top: 15px;
     }
 
     .gauge-box {
-      text-align: center;
-      flex: 1;
-      min-width: 120px;
-    }
-
-    .gauge-wrapper {
       position: relative;
-      width: 100%;
-      max-width: 180px;
-      margin: 10px auto;
+      width: 140px;
+      text-align: center;
     }
 
-    .gauge-value {
+    .gauge-val {
       position: absolute;
-      bottom: 15%;
+      bottom: 12%;
       left: 50%;
-      transform: translate(-50%, 0);
-      font-size: 1.2rem;
-      font-weight: bold;
+      transform: translateX(-50%);
+      font-size: 1.1rem;
+      font-weight: 700;
     }
 
-    /* Media Queries untuk Perangkat HP / Tablet */
-    @media (max-width: 900px) {
-      .chart-card {
-        grid-column: span 1;
+    /* Responsive Design */
+    @media (max-width: 1100px) {
+      .dashboard-main-grid {
+        grid-template-columns: 1fr;
       }
     }
 
@@ -204,187 +278,268 @@
       body {
         flex-direction: column;
       }
-
       .sidebar {
         width: 100%;
-        padding: 15px 20px;
-        flex-direction: row;
-        align-items: center;
+        padding: 16px;
       }
-
-      .dashboard-grid {
-        grid-template-columns: 1fr;
+      .menu-list {
+        display: none;
       }
-
-      .gauge-container {
-        flex-direction: row;
+      .sidebar-card {
+        display: none;
+      }
+      .main-wrapper {
+        padding: 16px;
       }
     }
   </style>
 </head>
 <body>
 
-  <!-- Sidebar -->
+  <!-- Sidebar glass -->
   <div class="sidebar">
-    <div class="logo">
-      SKADUTA 
-      <span>Smart Agriculture</span>
+    <div>
+      <div class="brand">
+        <div class="brand-icon"><i class="fa-solid fa-leaf"></i></div>
+        <div>SKADUTA <span style="font-size:0.75rem; color:var(--accent-cyan); display:block; font-weight:400;">Smart Agriculture</span></div>
+      </div>
+
+      <ul class="menu-list">
+        <li class="menu-item active"><a href="#"><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
+        <li class="menu-item"><a href="#"><i class="fa-solid fa-sliders"></i> Kontrol Relay</a></li>
+        <li class="menu-item"><a href="#"><i class="fa-solid fa-database"></i> Log Sensor</a></li>
+        <li class="menu-item"><a href="#"><i class="fa-solid fa-gear"></i> Pengaturan</a></li>
+      </ul>
     </div>
-    <div style="font-size:0.8rem; color:var(--text-muted);">
-      v1.0.0 Hydroponic
+
+    <div class="sidebar-card">
+      <i class="fa-solid fa-droplet" style="font-size:1.5rem; color:var(--accent-cyan); margin-bottom:8px;"></i>
+      <div style="font-size:0.8rem; font-weight:600;">System Hydroponics</div>
+      <div style="font-size:0.7rem; color:var(--text-muted); margin-top:4px;">v1.0.0 Connected</div>
     </div>
   </div>
 
-  <!-- Main Content -->
-  <div class="main-content">
-    <div class="header">
-      <div>SKADUTA Smart Hidroponik Panel</div>
-      <div id="db-status" style="color: #f39c12;">Connecting...</div>
-    </div>
-
-    <!-- Sakelar Relay -->
-    <div class="relay-container">
-      <div class="relay-card">
-        <span>Pompa pH Up</span>
-        <label class="switch">
-          <input type="checkbox" id="relay1" onchange="toggleRelay('relay1', this.checked)">
-          <span class="slider"></span>
-        </label>
+  <!-- Content Body -->
+  <div class="main-wrapper">
+    <!-- Navbar Header -->
+    <div class="navbar">
+      <div>
+        <div style="font-size: 0.85rem; color: var(--text-muted);">Pages / Dashboard</div>
+        <div style="font-size: 1.25rem; font-weight: 700; margin-top: 2px;">Smart Agriculture Panel</div>
       </div>
-      <div class="relay-card">
-        <span>Pompa pH Down</span>
-        <label class="switch">
-          <input type="checkbox" id="relay2" onchange="toggleRelay('relay2', this.checked)">
-          <span class="slider"></span>
-        </label>
-      </div>
-      <div class="relay-card">
-        <span>Pompa Nutrisi A</span>
-        <label class="switch">
-          <input type="checkbox" id="relay3" onchange="toggleRelay('relay3', this.checked)">
-          <span class="slider"></span>
-        </label>
-      </div>
-      <div class="relay-card">
-        <span>Pompa Nutrisi B</span>
-        <label class="switch">
-          <input type="checkbox" id="relay4" onchange="toggleRelay('relay4', this.checked)">
-          <span class="slider"></span>
-        </label>
+      <div class="status-badge" id="db-status">
+        <i class="fa-solid fa-circle-notch fa-spin"></i>
+        <span>Connecting...</span>
       </div>
     </div>
 
-    <!-- Dashboard Monitoring -->
-    <div class="dashboard-grid">
-      <!-- Grafik Riwayat -->
-      <div class="data-card chart-card">
-        <div class="card-title">Grafik Riwayat pH & TDS</div>
-        <div style="position: relative; width: 100%; min-height: 250px;">
+    <!-- Cards Control Switch (4 Relays) -->
+    <div class="cards-grid">
+      <div class="glass-card">
+        <div class="stat-header">
+          <div>
+            <div style="font-size:0.8rem; color:var(--text-muted);">Pompa pH Up</div>
+            <div style="font-weight:700; margin-top:4px;" id="r1-text">OFF</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="relay1" onchange="toggleRelay('relay1', this.checked)">
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="glass-card">
+        <div class="stat-header">
+          <div>
+            <div style="font-size:0.8rem; color:var(--text-muted);">Pompa pH Down</div>
+            <div style="font-weight:700; margin-top:4px;" id="r2-text">OFF</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="relay2" onchange="toggleRelay('relay2', this.checked)">
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="glass-card">
+        <div class="stat-header">
+          <div>
+            <div style="font-size:0.8rem; color:var(--text-muted);">Pompa Nutrisi A</div>
+            <div style="font-weight:700; margin-top:4px;" id="r3-text">OFF</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="relay3" onchange="toggleRelay('relay3', this.checked)">
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="glass-card">
+        <div class="stat-header">
+          <div>
+            <div style="font-size:0.8rem; color:var(--text-muted);">Pompa Nutrisi B</div>
+            <div style="font-weight:700; margin-top:4px;" id="r4-text">OFF</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="relay4" onchange="toggleRelay('relay4', this.checked)">
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Section (Chart & Gauge Gauges) -->
+    <div class="dashboard-main-grid">
+      <!-- Line Graph -->
+      <div class="glass-card">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <div style="font-weight:700; font-size:1rem;">Riwayat Sensor real-time</div>
+            <div style="font-size:0.8rem; color:var(--accent-cyan); margin-top:2px;">pH Air & TDS PPM</div>
+          </div>
+          <div class="stat-icon"><i class="fa-solid fa-chart-line"></i></div>
+        </div>
+        <div class="chart-container">
           <canvas id="sensorGraph"></canvas>
         </div>
       </div>
 
-      <!-- Gauge pH & TDS -->
-      <div class="data-card">
-        <div class="card-title">Monitoring Sensor</div>
-        <div class="gauge-container">
-          <div class="gauge-box">
-            <div style="font-size: 0.9rem;">Kadar pH</div>
-            <div class="gauge-wrapper">
+      <!-- Gauges & Info -->
+      <div style="display:flex; flex-direction:column; gap:20px;">
+        <div class="glass-card">
+          <div style="font-weight:700; font-size:0.95rem;">Monitoring Real-time</div>
+          <div class="gauges-flex">
+            <div class="gauge-box">
+              <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:5px;">pH Air</div>
               <canvas id="phGauge"></canvas>
-              <div class="gauge-value" id="phText" style="color: var(--accent-teal);">0.0</div>
+              <div class="gauge-val" id="phText" style="color: var(--accent-cyan);">0.0</div>
             </div>
-          </div>
-          <div class="gauge-box">
-            <div style="font-size: 0.9rem;">TDS (PPM)</div>
-            <div class="gauge-wrapper">
+            <div class="gauge-box">
+              <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:5px;">TDS (PPM)</div>
               <canvas id="tdsGauge"></canvas>
-              <div class="gauge-value" id="tdsText" style="color: var(--accent-orange);">0 PPM</div>
+              <div class="gauge-val" id="tdsText" style="color: var(--accent-orange);">0</div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Status Informasi -->
-      <div class="data-card">
-        <div class="card-title">Status Nutrisi & Air</div>
-        <div style="display: flex; flex-direction: column; gap: 12px; font-size: 0.9rem;">
-          <div>Update Terakhir: <br><strong id="last-update">-</strong></div>
-          <div>Status pH: <br><strong id="ph-status" style="color: var(--accent-teal);">Normal</strong></div>
-          <div>Status TDS: <br><strong id="tds-status" style="color: var(--accent-orange);">Normal</strong></div>
+        <div class="glass-card">
+          <div style="font-weight:700; font-size:0.95rem; margin-bottom:12px;">Status System</div>
+          <div style="display:flex; flex-direction:column; gap:10px; font-size:0.85rem;">
+            <div style="display:flex; justify-content:space-between;">
+              <span style="color:var(--text-muted);">Terakhir Update:</span>
+              <span id="last-update" style="font-weight:600;">-</span>
+            </div>
+            <div style="display:flex; justify-content:space-between;">
+              <span style="color:var(--text-muted);">Status pH:</span>
+              <span id="ph-status" style="color:var(--accent-cyan); font-weight:600;">Normal</span>
+            </div>
+            <div style="display:flex; justify-content:space-between;">
+              <span style="color:var(--text-muted);">Status TDS:</span>
+              <span id="tds-status" style="color:var(--accent-orange); font-weight:600;">Normal</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
+
   </div>
 
-  <!-- Integrasi Firebase JS SDK -->
+  <!-- Integrasi SDK Firebase -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-    // Konfigurasi Firebase Anda
-  const firebaseConfig = {
-  apiKey: "AIzaSyBrhYFBHJkCgH0xyxTv5dr8nOrO99SOzQs",
-  authDomain: "smart-agriculture-hendrik.firebaseapp.com",
-  databaseURL: "https://smart-agriculture-hendrik-default-rtdb.firebaseio.com",
-  projectId: "smart-agriculture-hendrik",
-  storageBucket: "smart-agriculture-hendrik.firebasestorage.app",
-  messagingSenderId: "639517546584",
-  appId: "1:639517546584:web:ff7e8a5f653bd7f7bb122d"
-};
+    // Konfigurasi Firebase dari akun smart-agriculture-hendrik
+    const firebaseConfig = {
+      apiKey: "AIzaSyBrhYFBHJkCgH0xyxTv5dr8nOrO99SOzQs",
+      authDomain: "smart-agriculture-hendrik.firebaseapp.com",
+      databaseURL: "https://smart-agriculture-hendrik-default-rtdb.firebaseio.com",
+      projectId: "smart-agriculture-hendrik",
+      storageBucket: "smart-agriculture-hendrik.firebasestorage.app",
+      messagingSenderId: "639517546584",
+      appId: "1:639517546584:web:ff7e8a5f653bd7f7bb122d"
+    };
+
     const app = initializeApp(firebaseConfig);
     const database = getDatabase(app);
 
-    // Fungsi Kontrol Relay
+    // Toggle Switch Relay
     window.toggleRelay = function (relayId, isChecked) {
       set(ref(database, 'agriculture_iot/relays/' + relayId), isChecked)
         .then(() => console.log(`Berhasil update ${relayId}: ${isChecked}`))
         .catch(error => console.error("Error update relay:", error));
     };
 
-    // Inisialisasi Chart Line
+    // Inisialisasi Line Chart (Futuristic Glow Style)
     const ctxGraph = document.getElementById('sensorGraph').getContext('2d');
+    
+    // Gradient pH
+    const gradCyan = ctxGraph.createLinearGradient(0, 0, 0, 300);
+    gradCyan.addColorStop(0, 'rgba(0, 240, 255, 0.4)');
+    gradCyan.addColorStop(1, 'rgba(0, 240, 255, 0.0)');
+
     const sensorChart = new Chart(ctxGraph, {
       type: 'line',
       data: {
         labels: [],
         datasets: [
-          { label: 'pH Air', data: [], borderColor: '#00c4b4', yAxisID: 'yPh', tension: 0.2 },
-          { label: 'TDS (PPM)', data: [], borderColor: '#f39c12', yAxisID: 'yTds', tension: 0.2 }
+          { 
+            label: 'pH Air', 
+            data: [], 
+            borderColor: '#00f0ff', 
+            backgroundColor: gradCyan,
+            fill: true,
+            yAxisID: 'yPh', 
+            tension: 0.4,
+            borderWidth: 2
+          },
+          { 
+            label: 'TDS (PPM)', 
+            data: [], 
+            borderColor: '#ff9900', 
+            yAxisID: 'yTds', 
+            tension: 0.4,
+            borderWidth: 2
+          }
         ]
       },
       options: { 
         responsive: true, 
         maintainAspectRatio: false,
+        plugins: {
+          legend: { labels: { color: '#8f9bba' } }
+        },
         scales: {
-          yPh: { type: 'linear', position: 'left', min: 0, max: 14 },
-          yTds: { type: 'linear', position: 'right', min: 0, max: 2000 }
+          x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#8f9bba' } },
+          yPh: { type: 'linear', position: 'left', min: 0, max: 14, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#00f0ff' } },
+          yTds: { type: 'linear', position: 'right', min: 0, max: 2000, grid: { drawOnChartArea: false }, ticks: { color: '#ff9900' } }
         }
       }
     });
 
-    // Inisialisasi Gauge
+    // Inisialisasi Gauge Arc
     function createGauge(elementId, color) {
       return new Chart(document.getElementById(elementId).getContext('2d'), {
         type: 'doughnut',
         data: { 
-          datasets: [{ data: [0, 100], backgroundColor: [color, '#13191d'], borderWidth: 0 }] 
+          datasets: [{ data: [0, 100], backgroundColor: [color, 'rgba(255,255,255,0.05)'], borderWidth: 0 }] 
         },
-        options: { rotation: -135, circumference: 270, cutout: '80%', responsive: true }
+        options: { rotation: -135, circumference: 270, cutout: '82%', responsive: true }
       });
     }
 
-    const phGaugeChart = createGauge('phGauge', '#00c4b4');
-    const tdsGaugeChart = createGauge('tdsGauge', '#f39c12');
+    const phGaugeChart = createGauge('phGauge', '#00f0ff');
+    const tdsGaugeChart = createGauge('tdsGauge', '#ff9900');
 
-    // Mendengarkan Data Realtime
+    // Sync Realtime dengan Firebase
     const iotRef = ref(database, 'agriculture_iot');
     onValue(iotRef, (snapshot) => {
       const data = snapshot.val();
       const statusElem = document.getElementById('db-status');
+      
       if (statusElem) {
-        statusElem.innerText = "Terhubung";
-        statusElem.style.color = "#00c4b4";
+        statusElem.classList.add('connected');
+        statusElem.innerHTML = `<i class="fa-solid fa-circle" style="font-size:0.6rem;"></i> <span>Terhubung</span>`;
       }
 
       if (data) {
@@ -401,7 +556,7 @@
         // Update TDS
         if (data.tds !== undefined) {
           const tds = parseFloat(data.tds);
-          document.getElementById('tdsText').innerText = Math.round(tds) + " PPM";
+          document.getElementById('tdsText').innerText = Math.round(tds);
           tdsGaugeChart.data.datasets[0].data = [Math.min(tds, 2000), Math.max(0, 2000 - Math.min(tds, 2000))];
           tdsGaugeChart.update();
         }
@@ -412,7 +567,7 @@
           sensorChart.data.datasets[0].data.push(parseFloat(data.ph));
           sensorChart.data.datasets[1].data.push(parseFloat(data.tds));
 
-          if (sensorChart.data.labels.length > 7) {
+          if (sensorChart.data.labels.length > 8) {
             sensorChart.data.labels.shift();
             sensorChart.data.datasets[0].data.shift();
             sensorChart.data.datasets[1].data.shift();
@@ -422,12 +577,18 @@
 
         document.getElementById('last-update').innerText = timeNow;
 
-        // Sync Status Relay
+        // Sync Relay & Status Text
         if (data.relays) {
           for (let i = 1; i <= 4; i++) {
             const rToggle = document.getElementById('relay' + i);
+            const rText = document.getElementById('r' + i + '-text');
             if (rToggle && data.relays['relay' + i] !== undefined) {
-              rToggle.checked = data.relays['relay' + i];
+              const state = data.relays['relay' + i];
+              rToggle.checked = state;
+              if (rText) {
+                rText.innerText = state ? 'ON' : 'OFF';
+                rText.style.color = state ? 'var(--accent-cyan)' : 'var(--text-main)';
+              }
             }
           }
         }
