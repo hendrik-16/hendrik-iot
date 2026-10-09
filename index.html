@@ -3,25 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SKADUTA Smart Agriculture - Animated Dashboard</title>
-  <!-- Library Chart.js -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
-  <!-- FontAwesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <title>SKADUTA Hydroponics - Masterpiece Edition</title>
   
+  <!-- Font & Icon Libraries -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
   <style>
     :root {
-      --bg-dark: #04081c;
-      --bg-card: rgba(10, 18, 50, 0.65);
-      --accent-blue: #0075ff;
-      --accent-cyan: #00f0ff;
-      --accent-purple: #7000ff;
-      --accent-orange: #ff9900;
-      --accent-red: #ff3366;
-      --text-main: #ffffff;
-      --text-muted: #8f9bba;
-      --border-color: rgba(0, 240, 255, 0.15);
-      --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+      --bg-dark: #030712;
+      --card-bg: rgba(15, 23, 42, 0.65);
+      --card-hover: rgba(30, 41, 59, 0.75);
+      --border-glow: rgba(56, 189, 248, 0.25);
+      --border-active: rgba(56, 189, 248, 0.6);
+      --cyan-glow: #38bdf8;
+      --purple-glow: #a855f7;
+      --emerald-glow: #10b981;
+      --amber-glow: #f59e0b;
+      --rose-glow: #f43f5e;
+      --text-bright: #f8fafc;
+      --text-muted: #94a3b8;
+      --glass-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
     }
 
     * {
@@ -31,222 +36,269 @@
     }
 
     body {
-      font-family: 'Plus Jakarta Sans', 'Segoe UI', sans-serif;
+      font-family: 'Plus Jakarta Sans', sans-serif;
       background-color: var(--bg-dark);
-      color: var(--text-main);
-      display: flex;
+      color: var(--text-bright);
       min-height: 100vh;
+      display: flex;
       overflow-x: hidden;
       position: relative;
     }
 
-    /* Animated Background Waves & Glowing Orbs */
-    .bg-orb {
+    /* Canvas Particle Background */
+    #particles-canvas {
       position: absolute;
-      border-radius: 50%;
-      filter: blur(90px);
+      top: 0; left: 0;
+      width: 100%; height: 100%;
       z-index: 0;
       pointer-events: none;
-      animation: floatOrb 12s infinite ease-in-out alternate;
     }
 
-    .orb-1 {
-      width: 350px;
-      height: 350px;
-      background: rgba(0, 117, 255, 0.25);
-      top: -50px;
-      left: -50px;
+    /* Ambient Lighting */
+    .light-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(120px);
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.5;
+      animation: floatAmbient 18s infinite ease-in-out alternate;
     }
 
-    .orb-2 {
-      width: 450px;
-      height: 450px;
-      background: rgba(112, 0, 255, 0.2);
-      bottom: -100px;
-      right: -50px;
-      animation-delay: -6s;
+    .orb-a {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(56, 189, 248, 0.25), transparent);
+      top: -150px; left: -100px;
     }
 
-    .orb-3 {
-      width: 250px;
-      height: 250px;
-      background: rgba(0, 240, 255, 0.15);
-      top: 40%;
-      left: 45%;
-      animation-delay: -3s;
+    .orb-b {
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(168, 85, 247, 0.2), transparent);
+      bottom: -200px; right: -150px;
+      animation-delay: -9s;
     }
 
-    @keyframes floatOrb {
+    @keyframes floatAmbient {
       0% { transform: translate(0, 0) scale(1); }
-      50% { transform: translate(40px, 30px) scale(1.1); }
-      100% { transform: translate(-30px, 50px) scale(0.9); }
+      50% { transform: translate(60px, 40px) scale(1.15); }
+      100% { transform: translate(-40px, 70px) scale(0.9); }
     }
 
-    /* Sidebar Glassmorphism */
+    /* Sidebar Glassmorphism Ultra */
     .sidebar {
-      width: 260px;
-      background: rgba(4, 8, 28, 0.75);
-      backdrop-filter: blur(20px);
-      border-right: 1px solid var(--border-color);
-      padding: 24px;
+      width: 270px;
+      background: rgba(3, 7, 18, 0.75);
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(30px);
+      border-right: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 30px 24px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      flex-shrink: 0;
       z-index: 10;
+      flex-shrink: 0;
     }
 
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 1.1rem;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-    }
-
-    .brand-icon {
-      width: 38px;
-      height: 38px;
-      background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.2rem;
-      box-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
-      animation: pulseGlow 2.5s infinite alternate;
-    }
-
-    @keyframes pulseGlow {
-      0% { box-shadow: 0 0 10px rgba(0, 240, 255, 0.4); }
-      100% { box-shadow: 0 0 22px rgba(0, 240, 255, 0.8); }
-    }
-
-    .menu-list {
-      list-style: none;
-      margin-top: 35px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .menu-item a {
+    .brand-logo {
       display: flex;
       align-items: center;
       gap: 14px;
-      padding: 12px 16px;
+    }
+
+    .logo-icon-wrap {
+      width: 44px; height: 44px;
+      background: linear-gradient(135deg, var(--cyan-glow), var(--purple-glow));
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem;
+      box-shadow: 0 0 25px rgba(56, 189, 248, 0.5);
+      animation: logoPulse 3s infinite alternate;
+    }
+
+    @keyframes logoPulse {
+      0% { box-shadow: 0 0 15px rgba(56, 189, 248, 0.4); }
+      100% { box-shadow: 0 0 35px rgba(168, 85, 247, 0.8); }
+    }
+
+    .brand-title {
+      font-weight: 800;
+      font-size: 1.25rem;
+      letter-spacing: 0.5px;
+      background: linear-gradient(135deg, #ffffff, var(--cyan-glow));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-sub {
+      font-size: 0.72rem;
       color: var(--text-muted);
-      text-decoration: none;
-      border-radius: 12px;
-      font-size: 0.9rem;
-      font-weight: 500;
-      transition: all 0.3s ease;
+      letter-spacing: 1px;
+      font-weight: 600;
+      text-transform: uppercase;
     }
 
-    .menu-item.active a, .menu-item a:hover {
-      background: linear-gradient(90deg, rgba(0, 240, 255, 0.15), transparent);
-      color: var(--text-main);
-      border-left: 3px solid var(--accent-cyan);
-      transform: translateX(4px);
-    }
-
-    .sidebar-card {
-      background: linear-gradient(135deg, rgba(0, 117, 255, 0.25), rgba(112, 0, 255, 0.25));
-      border: 1px solid rgba(0, 240, 255, 0.2);
-      border-radius: 16px;
-      padding: 16px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    /* Main Area */
-    .main-wrapper {
-      flex: 1;
-      padding: 24px 30px;
+    .nav-menu {
+      list-style: none;
+      margin-top: 40px;
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 12px;
+    }
+
+    .nav-item a {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 18px;
+      color: var(--text-muted);
+      text-decoration: none;
+      border-radius: 14px;
+      font-size: 0.92rem;
+      font-weight: 600;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 1px solid transparent;
+    }
+
+    .nav-item.active a, .nav-item a:hover {
+      background: rgba(56, 189, 248, 0.1);
+      color: var(--text-bright);
+      border-color: rgba(56, 189, 248, 0.3);
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.15);
+      transform: translateX(5px);
+    }
+
+    .nav-item.active i {
+      color: var(--cyan-glow);
+    }
+
+    .sidebar-widget {
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.1), rgba(168, 85, 247, 0.1));
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 20px;
+      text-align: center;
+      backdrop-filter: blur(10px);
+    }
+
+    /* Main Container */
+    .main-wrapper {
+      flex: 1;
+      padding: 30px 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
       overflow-y: auto;
       z-index: 2;
     }
 
-    /* Top Navbar */
-    .navbar {
+    /* Navbar Header */
+    .top-nav {
       display: flex;
       justify-content: space-between;
       align-items: center;
+    }
+
+    .page-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
     }
 
     .status-badge {
       display: flex;
       align-items: center;
-      gap: 8px;
-      background: rgba(255, 153, 0, 0.15);
-      border: 1px solid rgba(255, 153, 0, 0.3);
-      padding: 6px 16px;
-      border-radius: 30px;
+      gap: 10px;
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      padding: 8px 20px;
+      border-radius: 40px;
       font-size: 0.85rem;
-      color: var(--accent-orange);
-      transition: all 0.4s ease;
+      font-weight: 700;
+      color: var(--amber-glow);
+      backdrop-filter: blur(10px);
+      transition: all 0.5s ease;
     }
 
     .status-badge.connected {
-      background: rgba(0, 240, 255, 0.15);
-      border-color: rgba(0, 240, 255, 0.4);
-      color: var(--accent-cyan);
-      box-shadow: 0 0 12px rgba(0, 240, 255, 0.2);
+      background: rgba(16, 185, 129, 0.1);
+      border-color: rgba(16, 185, 129, 0.4);
+      color: var(--emerald-glow);
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
     }
 
     .live-dot {
-      width: 8px;
-      height: 8px;
+      width: 10px; height: 10px;
       border-radius: 50%;
-      background-color: var(--accent-cyan);
-      animation: blinkDot 1.2s infinite;
+      background-color: currentColor;
+      box-shadow: 0 0 10px currentColor;
+      animation: pulseDot 1.5s infinite;
     }
 
-    @keyframes blinkDot {
-      0%, 100% { opacity: 0.2; }
-      50% { opacity: 1; }
+    @keyframes pulseDot {
+      0%, 100% { opacity: 0.3; transform: scale(0.8); }
+      50% { opacity: 1; transform: scale(1.2); }
     }
 
-    /* Cards Layout Grid & Floating Card Effect */
+    /* Master Cards Grid */
     .cards-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 16px;
+      gap: 20px;
     }
 
-    .glass-card {
-      background: var(--bg-card);
-      backdrop-filter: blur(16px);
-      border: 1px solid var(--border-color);
-      border-radius: 20px;
-      padding: 20px;
+    .master-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border-glow);
+      border-radius: 24px;
+      padding: 24px;
       box-shadow: var(--glass-shadow);
-      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
     }
 
-    .glass-card:hover {
-      transform: translateY(-5px);
-      border-color: rgba(0, 240, 255, 0.4);
-      box-shadow: 0 12px 30px rgba(0, 240, 255, 0.15);
+    .master-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
     }
 
-    .stat-header {
+    .master-card:hover {
+      transform: translateY(-6px) scale(1.01);
+      border-color: var(--border-active);
+      box-shadow: 0 20px 40px rgba(56, 189, 248, 0.15);
+      background: var(--card-hover);
+    }
+
+    .card-header-flex {
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
-    /* Animated Switch Relay */
+    .card-label {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .card-status-val {
+      font-size: 1.3rem;
+      font-weight: 800;
+      margin-top: 6px;
+      letter-spacing: -0.5px;
+    }
+
+    /* Futuristic Switch Slider */
     .switch {
       position: relative;
       display: inline-block;
-      width: 50px;
-      height: 26px;
+      width: 56px; height: 30px;
     }
 
     .switch input { opacity: 0; width: 0; height: 0; }
@@ -256,149 +308,155 @@
       cursor: pointer;
       top: 0; left: 0; right: 0; bottom: 0;
       background-color: rgba(255, 255, 255, 0.08);
-      border: 1px solid var(--border-color);
-      transition: .4s ease;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      transition: .4s cubic-bezier(0.4, 0, 0.2, 1);
       border-radius: 34px;
     }
 
     .slider:before {
       position: absolute;
       content: "";
-      height: 18px;
-      width: 18px;
-      left: 3px;
-      bottom: 3px;
+      height: 22px; width: 22px;
+      left: 3px; bottom: 3px;
       background-color: var(--text-muted);
-      transition: .4s ease;
+      transition: .4s cubic-bezier(0.4, 0, 0.2, 1);
       border-radius: 50%;
     }
 
     input:checked + .slider {
-      background-color: var(--accent-blue);
-      border-color: var(--accent-cyan);
-      box-shadow: 0 0 14px rgba(0, 240, 255, 0.6);
+      background: linear-gradient(135deg, var(--cyan-glow), var(--purple-glow));
+      border-color: var(--cyan-glow);
+      box-shadow: 0 0 18px rgba(56, 189, 248, 0.6);
     }
 
     input:checked + .slider:before {
-      transform: translateX(24px);
-      background-color: #fff;
+      transform: translateX(26px);
+      background-color: #ffffff;
     }
 
-    /* Main Section Grid */
-    .dashboard-main-grid {
+    /* Dashboard Main Grid Layout */
+    .main-grid {
       display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 20px;
+      grid-template-columns: 2.2fr 1fr;
+      gap: 24px;
     }
 
-    .chart-container {
+    .chart-box {
       position: relative;
       width: 100%;
-      height: 280px;
-      margin-top: 15px;
+      height: 300px;
+      margin-top: 20px;
     }
 
-    /* Gauge Arc Cards */
-    .gauges-flex {
+    /* Gauge & Monitoring Box */
+    .gauge-wrapper-flex {
       display: flex;
       justify-content: space-around;
       align-items: center;
-      margin-top: 15px;
+      margin-top: 20px;
     }
 
-    .gauge-box {
+    .gauge-item {
       position: relative;
-      width: 140px;
+      width: 150px;
       text-align: center;
     }
 
-    .gauge-val {
+    .gauge-number {
       position: absolute;
-      bottom: 12%;
-      left: 50%;
+      bottom: 12%; left: 50%;
       transform: translateX(-50%);
-      font-size: 1.15rem;
-      font-weight: 700;
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
     }
 
-    /* Responsive Design */
+    .info-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: 15px;
+      font-size: 0.9rem;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* Responsive Breakdown */
     @media (max-width: 1100px) {
-      .dashboard-main-grid {
-        grid-template-columns: 1fr;
-      }
+      .main-grid { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 768px) {
-      body {
-        flex-direction: column;
-      }
-      .sidebar {
-        width: 100%;
-        padding: 16px;
-      }
-      .menu-list {
-        display: none;
-      }
-      .sidebar-card {
-        display: none;
-      }
-      .main-wrapper {
-        padding: 16px;
-      }
+      body { flex-direction: column; }
+      .sidebar { width: 100%; padding: 20px; }
+      .nav-menu, .sidebar-widget { display: none; }
+      .main-wrapper { padding: 20px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Animated Orbs Background -->
-  <div class="bg-orb orb-1"></div>
-  <div class="bg-orb orb-2"></div>
-  <div class="bg-orb orb-3"></div>
+  <!-- Background Particle Animation -->
+  <canvas id="particles-canvas"></canvas>
 
-  <!-- Sidebar -->
-  <div class="sidebar">
+  <!-- Ambient Light Orbs -->
+  <div class="light-orb orb-a"></div>
+  <div class="light-orb orb-b"></div>
+
+  <!-- Sidebar Ultra Glass -->
+  <aside class="sidebar">
     <div>
-      <div class="brand">
-        <div class="brand-icon"><i class="fa-solid fa-leaf"></i></div>
-        <div>SKADUTA <span style="font-size:0.75rem; color:var(--accent-cyan); display:block; font-weight:400;">Smart Agriculture</span></div>
+      <div class="brand-logo">
+        <div class="logo-icon-wrap"><i class="fa-solid fa-leaf"></i></div>
+        <div>
+          <div class="brand-title">SKADUTA</div>
+          <div class="brand-sub">Smart Agriculture</div>
+        </div>
       </div>
 
-      <ul class="menu-list">
-        <li class="menu-item active"><a href="#"><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
-        <li class="menu-item"><a href="#"><i class="fa-solid fa-sliders"></i> Kontrol Relay</a></li>
-        <li class="menu-item"><a href="#"><i class="fa-solid fa-database"></i> Log Sensor</a></li>
-        <li class="menu-item"><a href="#"><i class="fa-solid fa-gear"></i> Pengaturan</a></li>
+      <ul class="nav-menu">
+        <li class="nav-item active"><a href="#"><i class="fa-solid fa-grip"></i> Dashboard</a></li>
+        <li class="nav-item"><a href="#"><i class="fa-solid fa-toggle-on"></i> Kontrol Relay</a></li>
+        <li class="nav-item"><a href="#"><i class="fa-solid fa-chart-simple"></i> Analytics</a></li>
+        <li class="nav-item"><a href="#"><i class="fa-solid fa-sliders"></i> Pengaturan</a></li>
       </ul>
     </div>
 
-    <div class="sidebar-card">
-      <i class="fa-solid fa-droplet" style="font-size:1.6rem; color:var(--accent-cyan); margin-bottom:8px; animation: floatOrb 3s infinite alternate;"></i>
-      <div style="font-size:0.8rem; font-weight:600;">Hydroponic System</div>
-      <div style="font-size:0.7rem; color:var(--text-muted); margin-top:4px;">v1.0.0 Realtime</div>
+    <div class="sidebar-widget">
+      <i class="fa-solid fa-droplet" style="font-size:1.8rem; color:var(--cyan-glow); margin-bottom:8px;"></i>
+      <div style="font-size:0.85rem; font-weight:700;">Hydroponic Master</div>
+      <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">Realtime Firebase System</div>
     </div>
-  </div>
+  </aside>
 
-  <!-- Content Body -->
-  <div class="main-wrapper">
-    <!-- Navbar Header -->
-    <div class="navbar">
+  <!-- Main Content Wrapper -->
+  <main class="main-wrapper">
+    
+    <!-- Top Bar Navigation -->
+    <header class="top-nav">
       <div>
-        <div style="font-size: 0.85rem; color: var(--text-muted);">Pages / Dashboard</div>
-        <div style="font-size: 1.25rem; font-weight: 700; margin-top: 2px;">Smart Agriculture Panel</div>
+        <div style="font-size:0.82rem; color:var(--text-muted); text-transform:uppercase; font-weight:700; letter-spacing:1px;">System Panel</div>
+        <h1 class="page-title">Hidroponik Control Dashboard</h1>
       </div>
       <div class="status-badge" id="db-status">
-        <i class="fa-solid fa-circle-notch fa-spin"></i>
-        <span>Connecting...</span>
+        <div class="live-dot"></div>
+        <span>Menghubungkan...</span>
       </div>
-    </div>
+    </header>
 
-    <!-- Cards Control Switch (4 Relays) -->
-    <div class="cards-grid">
-      <div class="glass-card">
-        <div class="stat-header">
+    <!-- Master Relay Switch Grid -->
+    <section class="cards-grid">
+      <div class="master-card">
+        <div class="card-header-flex">
           <div>
-            <div style="font-size:0.8rem; color:var(--text-muted);">Pompa pH Up</div>
-            <div style="font-weight:700; margin-top:4px;" id="r1-text">OFF</div>
+            <div class="card-label">Pompa pH Up</div>
+            <div class="card-status-val" id="r1-text" style="color:var(--text-muted);">OFF</div>
           </div>
           <label class="switch">
             <input type="checkbox" id="relay1" onchange="toggleRelay('relay1', this.checked)">
@@ -407,11 +465,11 @@
         </div>
       </div>
 
-      <div class="glass-card">
-        <div class="stat-header">
+      <div class="master-card">
+        <div class="card-header-flex">
           <div>
-            <div style="font-size:0.8rem; color:var(--text-muted);">Pompa pH Down</div>
-            <div style="font-weight:700; margin-top:4px;" id="r2-text">OFF</div>
+            <div class="card-label">Pompa pH Down</div>
+            <div class="card-status-val" id="r2-text" style="color:var(--text-muted);">OFF</div>
           </div>
           <label class="switch">
             <input type="checkbox" id="relay2" onchange="toggleRelay('relay2', this.checked)">
@@ -420,11 +478,11 @@
         </div>
       </div>
 
-      <div class="glass-card">
-        <div class="stat-header">
+      <div class="master-card">
+        <div class="card-header-flex">
           <div>
-            <div style="font-size:0.8rem; color:var(--text-muted);">Pompa Nutrisi A</div>
-            <div style="font-weight:700; margin-top:4px;" id="r3-text">OFF</div>
+            <div class="card-label">Pompa Nutrisi A</div>
+            <div class="card-status-val" id="r3-text" style="color:var(--text-muted);">OFF</div>
           </div>
           <label class="switch">
             <input type="checkbox" id="relay3" onchange="toggleRelay('relay3', this.checked)">
@@ -433,11 +491,11 @@
         </div>
       </div>
 
-      <div class="glass-card">
-        <div class="stat-header">
+      <div class="master-card">
+        <div class="card-header-flex">
           <div>
-            <div style="font-size:0.8rem; color:var(--text-muted);">Pompa Nutrisi B</div>
-            <div style="font-weight:700; margin-top:4px;" id="r4-text">OFF</div>
+            <div class="card-label">Pompa Nutrisi B</div>
+            <div class="card-status-val" id="r4-text" style="color:var(--text-muted);">OFF</div>
           </div>
           <label class="switch">
             <input type="checkbox" id="relay4" onchange="toggleRelay('relay4', this.checked)">
@@ -445,70 +503,136 @@
           </label>
         </div>
       </div>
-    </div>
+    </section>
 
-    <!-- Main Section (Chart & Gauges) -->
-    <div class="dashboard-main-grid">
-      <!-- Animated Line Graph -->
-      <div class="glass-card">
+    <!-- Dashboard Main Content Grid -->
+    <section class="main-grid">
+      
+      <!-- Line Chart Analytics -->
+      <div class="master-card">
         <div style="display:flex; justify-content:space-between; align-items:center;">
           <div>
-            <div style="font-weight:700; font-size:1rem;">Riwayat Sensor real-time</div>
-            <div style="font-size:0.8rem; color:var(--accent-cyan); margin-top:2px;">pH Air & TDS PPM</div>
+            <h3 style="font-size:1.1rem; font-weight:800;">Grafik Sensor Realtime</h3>
+            <p style="font-size:0.8rem; color:var(--cyan-glow); font-weight:600; margin-top:2px;">Monitoring Telemetri pH & TDS</p>
           </div>
-          <div style="color:var(--accent-cyan); font-size:1.2rem;"><i class="fa-solid fa-chart-line"></i></div>
+          <div style="width:40px; height:40px; background:rgba(56, 189, 248, 0.1); border-radius:12px; display:flex; align-items:center; justify-content:center; color:var(--cyan-glow);">
+            <i class="fa-solid fa-wave-square"></i>
+          </div>
         </div>
-        <div class="chart-container">
+        <div class="chart-box">
           <canvas id="sensorGraph"></canvas>
         </div>
       </div>
 
-      <!-- Gauges & Info -->
-      <div style="display:flex; flex-direction:column; gap:20px;">
-        <div class="glass-card">
-          <div style="font-weight:700; font-size:0.95rem;">Monitoring Real-time</div>
-          <div class="gauges-flex">
-            <div class="gauge-box">
-              <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:5px;">pH Air</div>
+      <!-- Gauge Arc & System Status -->
+      <div style="display:flex; flex-direction:column; gap:24px;">
+        
+        <div class="master-card">
+          <h3 style="font-size:1.05rem; font-weight:800;">Nilai Sensor Aktif</h3>
+          <div class="gauge-wrapper-flex">
+            <div class="gauge-item">
+              <div style="font-size:0.8rem; color:var(--text-muted); font-weight:600; margin-bottom:8px;">pH Air</div>
               <canvas id="phGauge"></canvas>
-              <div class="gauge-val" id="phText" style="color: var(--accent-cyan);">0.0</div>
+              <div class="gauge-number" id="phText" style="color:var(--cyan-glow);">0.0</div>
             </div>
-            <div class="gauge-box">
-              <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:5px;">TDS (PPM)</div>
+            <div class="gauge-item">
+              <div style="font-size:0.8rem; color:var(--text-muted); font-weight:600; margin-bottom:8px;">TDS (PPM)</div>
               <canvas id="tdsGauge"></canvas>
-              <div class="gauge-val" id="tdsText" style="color: var(--accent-orange);">0</div>
+              <div class="gauge-number" id="tdsText" style="color:var(--amber-glow);">0</div>
             </div>
           </div>
         </div>
 
-        <div class="glass-card">
-          <div style="font-weight:700; font-size:0.95rem; margin-bottom:12px;">Status System</div>
-          <div style="display:flex; flex-direction:column; gap:10px; font-size:0.85rem;">
-            <div style="display:flex; justify-content:space-between;">
-              <span style="color:var(--text-muted);">Terakhir Update:</span>
-              <span id="last-update" style="font-weight:600;">-</span>
+        <div class="master-card">
+          <h3 style="font-size:1.05rem; font-weight:800;">Status Telemetri</h3>
+          <div class="info-list">
+            <div class="info-row">
+              <span style="color:var(--text-muted);">Waktu Sinkron:</span>
+              <strong id="last-update" style="font-size:0.95rem;">-</strong>
             </div>
-            <div style="display:flex; justify-content:space-between;">
-              <span style="color:var(--text-muted);">Status pH:</span>
-              <span id="ph-status" style="color:var(--accent-cyan); font-weight:600;">Normal</span>
+            <div class="info-row">
+              <span style="color:var(--text-muted);">Kondisi pH:</span>
+              <strong id="ph-status" style="color:var(--cyan-glow);">Optimal</strong>
             </div>
-            <div style="display:flex; justify-content:space-between;">
-              <span style="color:var(--text-muted);">Status TDS:</span>
-              <span id="tds-status" style="color:var(--accent-orange); font-weight:600;">Normal</span>
+            <div class="info-row">
+              <span style="color:var(--text-muted);">Kondisi TDS:</span>
+              <strong id="tds-status" style="color:var(--amber-glow);">Optimal</strong>
             </div>
           </div>
         </div>
+
       </div>
-    </div>
 
-  </div>
+    </section>
 
-  <!-- Integrasi SDK Firebase -->
+  </main>
+
+  <!-- Animated Interactive Mesh Particle Background Script -->
+  <script>
+    const canvas = document.getElementById('particles-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.vx = (Math.random() - 0.5) * 0.4;
+        this.vy = (Math.random() - 0.5) * 0.4;
+        this.radius = Math.random() * 1.5 + 1;
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(56, 189, 248, 0.25)';
+        ctx.fill();
+      }
+    }
+
+    for (let i = 0; i < 45; i++) particles.push(new Particle());
+
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach((p, index) => {
+        p.update();
+        p.draw();
+        for (let j = index + 1; j < particles.length; j++) {
+          const p2 = particles[j];
+          const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+          if (dist < 120) {
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.strokeStyle = `rgba(56, 189, 248, ${0.12 - dist / 1000})`;
+            ctx.lineWidth = 0.8;
+            ctx.stroke();
+          }
+        }
+      });
+      requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+  </script>
+
+  <!-- Firebase JS SDK Integration -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-    // Konfigurasi Firebase Anda
+    // Konfigurasi Firebase Milikmu
     const firebaseConfig = {
       apiKey: "AIzaSyBrhYFBHJkCgH0xyxTv5dr8nOrO99SOzQs",
       authDomain: "smart-agriculture-hendrik.firebaseapp.com",
@@ -522,19 +646,23 @@
     const app = initializeApp(firebaseConfig);
     const database = getDatabase(app);
 
-    // Toggle Switch Relay
+    // Toggle Relay Control
     window.toggleRelay = function (relayId, isChecked) {
       set(ref(database, 'agriculture_iot/relays/' + relayId), isChecked)
         .then(() => console.log(`Berhasil update ${relayId}: ${isChecked}`))
         .catch(error => console.error("Error update relay:", error));
     };
 
-    // Inisialisasi Line Chart (Animasi Halus & Smooth Area)
+    // Chart.js Line Chart with Masterpiece Gradient Area
     const ctxGraph = document.getElementById('sensorGraph').getContext('2d');
     
     const gradCyan = ctxGraph.createLinearGradient(0, 0, 0, 300);
-    gradCyan.addColorStop(0, 'rgba(0, 240, 255, 0.45)');
-    gradCyan.addColorStop(1, 'rgba(0, 240, 255, 0.0)');
+    gradCyan.addColorStop(0, 'rgba(56, 189, 248, 0.45)');
+    gradCyan.addColorStop(1, 'rgba(56, 189, 248, 0.0)');
+
+    const gradAmber = ctxGraph.createLinearGradient(0, 0, 0, 300);
+    gradAmber.addColorStop(0, 'rgba(245, 158, 11, 0.35)');
+    gradAmber.addColorStop(1, 'rgba(245, 158, 11, 0.0)');
 
     const sensorChart = new Chart(ctxGraph, {
       type: 'line',
@@ -544,46 +672,49 @@
           { 
             label: 'pH Air', 
             data: [], 
-            borderColor: '#00f0ff', 
+            borderColor: '#38bdf8', 
             backgroundColor: gradCyan,
             fill: true,
             yAxisID: 'yPh', 
             tension: 0.45,
             borderWidth: 3,
+            pointBackgroundColor: '#38bdf8',
+            pointBorderColor: '#ffffff',
             pointRadius: 4,
-            pointHoverRadius: 7
+            pointHoverRadius: 8
           },
           { 
             label: 'TDS (PPM)', 
             data: [], 
-            borderColor: '#ff9900', 
+            borderColor: '#f59e0b', 
+            backgroundColor: gradAmber,
+            fill: true,
             yAxisID: 'yTds', 
             tension: 0.45,
             borderWidth: 3,
+            pointBackgroundColor: '#f59e0b',
+            pointBorderColor: '#ffffff',
             pointRadius: 4,
-            pointHoverRadius: 7
+            pointHoverRadius: 8
           }
         ]
       },
       options: { 
         responsive: true, 
         maintainAspectRatio: false,
-        animation: {
-          duration: 1000,
-          easing: 'easeOutQuart'
-        },
+        animation: { duration: 1000, easing: 'easeOutQuart' },
         plugins: {
-          legend: { labels: { color: '#8f9bba' } }
+          legend: { labels: { color: '#94a3b8', font: { family: 'Plus Jakarta Sans', weight: '600' } } }
         },
         scales: {
-          x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#8f9bba' } },
-          yPh: { type: 'linear', position: 'left', min: 0, max: 14, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#00f0ff' } },
-          yTds: { type: 'linear', position: 'right', min: 0, max: 2000, grid: { drawOnChartArea: false }, ticks: { color: '#ff9900' } }
+          x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#94a3b8' } },
+          yPh: { type: 'linear', position: 'left', min: 0, max: 14, grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#38bdf8' } },
+          yTds: { type: 'linear', position: 'right', min: 0, max: 2000, grid: { drawOnChartArea: false }, ticks: { color: '#f59e0b' } }
         }
       }
     });
 
-    // Inisialisasi Gauge Arc
+    // Custom Gauge Doughnut Chart
     function createGauge(elementId, color) {
       return new Chart(document.getElementById(elementId).getContext('2d'), {
         type: 'doughnut',
@@ -593,17 +724,17 @@
         options: { 
           rotation: -135, 
           circumference: 270, 
-          cutout: '82%', 
+          cutout: '84%', 
           responsive: true,
-          animation: { animateRotate: true, animateScale: true }
+          animation: { animateRotate: true }
         }
       });
     }
 
-    const phGaugeChart = createGauge('phGauge', '#00f0ff');
-    const tdsGaugeChart = createGauge('tdsGauge', '#ff9900');
+    const phGaugeChart = createGauge('phGauge', '#38bdf8');
+    const tdsGaugeChart = createGauge('tdsGauge', '#f59e0b');
 
-    // Sync Realtime dengan Firebase
+    // Realtime Listener Firebase
     const iotRef = ref(database, 'agriculture_iot');
     onValue(iotRef, (snapshot) => {
       const data = snapshot.val();
@@ -611,7 +742,7 @@
       
       if (statusElem) {
         statusElem.classList.add('connected');
-        statusElem.innerHTML = `<div class="live-dot"></div> <span>Terhubung</span>`;
+        statusElem.innerHTML = `<div class="live-dot"></div> <span>Sistem Terhubung</span>`;
       }
 
       if (data) {
@@ -633,7 +764,7 @@
           tdsGaugeChart.update();
         }
 
-        // Update Line Chart
+        // Update Line Chart Sync
         if (data.ph !== undefined && data.tds !== undefined) {
           sensorChart.data.labels.push(timeNow);
           sensorChart.data.datasets[0].data.push(parseFloat(data.ph));
@@ -649,7 +780,7 @@
 
         document.getElementById('last-update').innerText = timeNow;
 
-        // Sync Relay & Status Text
+        // Sync Relay Status
         if (data.relays) {
           for (let i = 1; i <= 4; i++) {
             const rToggle = document.getElementById('relay' + i);
@@ -658,8 +789,8 @@
               const state = data.relays['relay' + i];
               rToggle.checked = state;
               if (rText) {
-                rText.innerText = state ? 'ON' : 'OFF';
-                rText.style.color = state ? 'var(--accent-cyan)' : 'var(--text-main)';
+                rText.innerText = state ? 'AKTIF' : 'NONAKTIF';
+                rText.style.color = state ? 'var(--cyan-glow)' : 'var(--text-muted)';
               }
             }
           }
