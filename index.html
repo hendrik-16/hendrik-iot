@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SKADUTA Smart Agriculture - Dashboard</title>
+  <title>SKADUTA Smart Agriculture - Animated Dashboard</title>
   <!-- Library Chart.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
   <!-- FontAwesome Icons -->
@@ -11,9 +11,8 @@
   
   <style>
     :root {
-      --bg-dark: #060b26;
-      --bg-card: rgba(14, 21, 58, 0.7);
-      --bg-card-hover: rgba(20, 30, 80, 0.8);
+      --bg-dark: #04081c;
+      --bg-card: rgba(10, 18, 50, 0.65);
       --accent-blue: #0075ff;
       --accent-cyan: #00f0ff;
       --accent-purple: #7000ff;
@@ -21,8 +20,8 @@
       --accent-red: #ff3366;
       --text-main: #ffffff;
       --text-muted: #8f9bba;
-      --border-color: rgba(255, 255, 255, 0.08);
-      --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      --border-color: rgba(0, 240, 255, 0.15);
+      --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
     }
 
     * {
@@ -34,19 +33,59 @@
     body {
       font-family: 'Plus Jakarta Sans', 'Segoe UI', sans-serif;
       background-color: var(--bg-dark);
-      background-image: 
-        radial-gradient(circle at 10% 20%, rgba(0, 117, 255, 0.15) 0%, transparent 40%),
-        radial-gradient(circle at 90% 80%, rgba(112, 0, 255, 0.15) 0%, transparent 40%);
       color: var(--text-main);
       display: flex;
       min-height: 100vh;
       overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Animated Background Waves & Glowing Orbs */
+    .bg-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(90px);
+      z-index: 0;
+      pointer-events: none;
+      animation: floatOrb 12s infinite ease-in-out alternate;
+    }
+
+    .orb-1 {
+      width: 350px;
+      height: 350px;
+      background: rgba(0, 117, 255, 0.25);
+      top: -50px;
+      left: -50px;
+    }
+
+    .orb-2 {
+      width: 450px;
+      height: 450px;
+      background: rgba(112, 0, 255, 0.2);
+      bottom: -100px;
+      right: -50px;
+      animation-delay: -6s;
+    }
+
+    .orb-3 {
+      width: 250px;
+      height: 250px;
+      background: rgba(0, 240, 255, 0.15);
+      top: 40%;
+      left: 45%;
+      animation-delay: -3s;
+    }
+
+    @keyframes floatOrb {
+      0% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(40px, 30px) scale(1.1); }
+      100% { transform: translate(-30px, 50px) scale(0.9); }
     }
 
     /* Sidebar Glassmorphism */
     .sidebar {
       width: 260px;
-      background: rgba(6, 11, 38, 0.85);
+      background: rgba(4, 8, 28, 0.75);
       backdrop-filter: blur(20px);
       border-right: 1px solid var(--border-color);
       padding: 24px;
@@ -67,15 +106,21 @@
     }
 
     .brand-icon {
-      width: 36px;
-      height: 36px;
+      width: 38px;
+      height: 38px;
       background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
-      border-radius: 10px;
+      border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.1rem;
-      box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+      font-size: 1.2rem;
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
+      animation: pulseGlow 2.5s infinite alternate;
+    }
+
+    @keyframes pulseGlow {
+      0% { box-shadow: 0 0 10px rgba(0, 240, 255, 0.4); }
+      100% { box-shadow: 0 0 22px rgba(0, 240, 255, 0.8); }
     }
 
     .menu-list {
@@ -83,7 +128,7 @@
       margin-top: 35px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 10px;
     }
 
     .menu-item a {
@@ -100,17 +145,20 @@
     }
 
     .menu-item.active a, .menu-item a:hover {
-      background: linear-gradient(90deg, rgba(0, 117, 255, 0.2), transparent);
+      background: linear-gradient(90deg, rgba(0, 240, 255, 0.15), transparent);
       color: var(--text-main);
       border-left: 3px solid var(--accent-cyan);
+      transform: translateX(4px);
     }
 
     .sidebar-card {
-      background: linear-gradient(135deg, rgba(0, 117, 255, 0.3), rgba(112, 0, 255, 0.3));
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: linear-gradient(135deg, rgba(0, 117, 255, 0.25), rgba(112, 0, 255, 0.25));
+      border: 1px solid rgba(0, 240, 255, 0.2);
       border-radius: 16px;
       padding: 16px;
       text-align: center;
+      position: relative;
+      overflow: hidden;
     }
 
     /* Main Area */
@@ -121,6 +169,7 @@
       flex-direction: column;
       gap: 20px;
       overflow-y: auto;
+      z-index: 2;
     }
 
     /* Top Navbar */
@@ -136,19 +185,34 @@
       gap: 8px;
       background: rgba(255, 153, 0, 0.15);
       border: 1px solid rgba(255, 153, 0, 0.3);
-      padding: 6px 14px;
+      padding: 6px 16px;
       border-radius: 30px;
       font-size: 0.85rem;
       color: var(--accent-orange);
+      transition: all 0.4s ease;
     }
 
     .status-badge.connected {
       background: rgba(0, 240, 255, 0.15);
-      border-color: rgba(0, 240, 255, 0.3);
+      border-color: rgba(0, 240, 255, 0.4);
       color: var(--accent-cyan);
+      box-shadow: 0 0 12px rgba(0, 240, 255, 0.2);
     }
 
-    /* Cards Layout Grid */
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--accent-cyan);
+      animation: blinkDot 1.2s infinite;
+    }
+
+    @keyframes blinkDot {
+      0%, 100% { opacity: 0.2; }
+      50% { opacity: 1; }
+    }
+
+    /* Cards Layout Grid & Floating Card Effect */
     .cards-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -157,16 +221,18 @@
 
     .glass-card {
       background: var(--bg-card);
-      backdrop-filter: blur(12px);
+      backdrop-filter: blur(16px);
       border: 1px solid var(--border-color);
       border-radius: 20px;
       padding: 20px;
       box-shadow: var(--glass-shadow);
-      transition: transform 0.2s ease, border-color 0.2s ease;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     }
 
     .glass-card:hover {
-      border-color: rgba(0, 240, 255, 0.3);
+      transform: translateY(-5px);
+      border-color: rgba(0, 240, 255, 0.4);
+      box-shadow: 0 12px 30px rgba(0, 240, 255, 0.15);
     }
 
     .stat-header {
@@ -175,24 +241,12 @@
       align-items: center;
     }
 
-    .stat-icon {
-      width: 42px;
-      height: 42px;
-      background: rgba(0, 117, 255, 0.2);
-      color: var(--accent-cyan);
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.1rem;
-    }
-
-    /* Switch Relay Styling */
+    /* Animated Switch Relay */
     .switch {
       position: relative;
       display: inline-block;
-      width: 46px;
-      height: 24px;
+      width: 50px;
+      height: 26px;
     }
 
     .switch input { opacity: 0; width: 0; height: 0; }
@@ -201,32 +255,32 @@
       position: absolute;
       cursor: pointer;
       top: 0; left: 0; right: 0; bottom: 0;
-      background-color: rgba(255, 255, 255, 0.1);
+      background-color: rgba(255, 255, 255, 0.08);
       border: 1px solid var(--border-color);
-      transition: .3s;
+      transition: .4s ease;
       border-radius: 34px;
     }
 
     .slider:before {
       position: absolute;
       content: "";
-      height: 16px;
-      width: 16px;
+      height: 18px;
+      width: 18px;
       left: 3px;
       bottom: 3px;
       background-color: var(--text-muted);
-      transition: .3s;
+      transition: .4s ease;
       border-radius: 50%;
     }
 
     input:checked + .slider {
       background-color: var(--accent-blue);
       border-color: var(--accent-cyan);
-      box-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+      box-shadow: 0 0 14px rgba(0, 240, 255, 0.6);
     }
 
     input:checked + .slider:before {
-      transform: translateX(22px);
+      transform: translateX(24px);
       background-color: #fff;
     }
 
@@ -263,7 +317,7 @@
       bottom: 12%;
       left: 50%;
       transform: translateX(-50%);
-      font-size: 1.1rem;
+      font-size: 1.15rem;
       font-weight: 700;
     }
 
@@ -296,7 +350,12 @@
 </head>
 <body>
 
-  <!-- Sidebar glass -->
+  <!-- Animated Orbs Background -->
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
+  <div class="bg-orb orb-3"></div>
+
+  <!-- Sidebar -->
   <div class="sidebar">
     <div>
       <div class="brand">
@@ -313,9 +372,9 @@
     </div>
 
     <div class="sidebar-card">
-      <i class="fa-solid fa-droplet" style="font-size:1.5rem; color:var(--accent-cyan); margin-bottom:8px;"></i>
-      <div style="font-size:0.8rem; font-weight:600;">System Hydroponics</div>
-      <div style="font-size:0.7rem; color:var(--text-muted); margin-top:4px;">v1.0.0 Connected</div>
+      <i class="fa-solid fa-droplet" style="font-size:1.6rem; color:var(--accent-cyan); margin-bottom:8px; animation: floatOrb 3s infinite alternate;"></i>
+      <div style="font-size:0.8rem; font-weight:600;">Hydroponic System</div>
+      <div style="font-size:0.7rem; color:var(--text-muted); margin-top:4px;">v1.0.0 Realtime</div>
     </div>
   </div>
 
@@ -388,16 +447,16 @@
       </div>
     </div>
 
-    <!-- Main Section (Chart & Gauge Gauges) -->
+    <!-- Main Section (Chart & Gauges) -->
     <div class="dashboard-main-grid">
-      <!-- Line Graph -->
+      <!-- Animated Line Graph -->
       <div class="glass-card">
         <div style="display:flex; justify-content:space-between; align-items:center;">
           <div>
             <div style="font-weight:700; font-size:1rem;">Riwayat Sensor real-time</div>
             <div style="font-size:0.8rem; color:var(--accent-cyan); margin-top:2px;">pH Air & TDS PPM</div>
           </div>
-          <div class="stat-icon"><i class="fa-solid fa-chart-line"></i></div>
+          <div style="color:var(--accent-cyan); font-size:1.2rem;"><i class="fa-solid fa-chart-line"></i></div>
         </div>
         <div class="chart-container">
           <canvas id="sensorGraph"></canvas>
@@ -449,7 +508,7 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-    // Konfigurasi Firebase dari akun smart-agriculture-hendrik
+    // Konfigurasi Firebase Anda
     const firebaseConfig = {
       apiKey: "AIzaSyBrhYFBHJkCgH0xyxTv5dr8nOrO99SOzQs",
       authDomain: "smart-agriculture-hendrik.firebaseapp.com",
@@ -470,12 +529,11 @@
         .catch(error => console.error("Error update relay:", error));
     };
 
-    // Inisialisasi Line Chart (Futuristic Glow Style)
+    // Inisialisasi Line Chart (Animasi Halus & Smooth Area)
     const ctxGraph = document.getElementById('sensorGraph').getContext('2d');
     
-    // Gradient pH
     const gradCyan = ctxGraph.createLinearGradient(0, 0, 0, 300);
-    gradCyan.addColorStop(0, 'rgba(0, 240, 255, 0.4)');
+    gradCyan.addColorStop(0, 'rgba(0, 240, 255, 0.45)');
     gradCyan.addColorStop(1, 'rgba(0, 240, 255, 0.0)');
 
     const sensorChart = new Chart(ctxGraph, {
@@ -490,22 +548,30 @@
             backgroundColor: gradCyan,
             fill: true,
             yAxisID: 'yPh', 
-            tension: 0.4,
-            borderWidth: 2
+            tension: 0.45,
+            borderWidth: 3,
+            pointRadius: 4,
+            pointHoverRadius: 7
           },
           { 
             label: 'TDS (PPM)', 
             data: [], 
             borderColor: '#ff9900', 
             yAxisID: 'yTds', 
-            tension: 0.4,
-            borderWidth: 2
+            tension: 0.45,
+            borderWidth: 3,
+            pointRadius: 4,
+            pointHoverRadius: 7
           }
         ]
       },
       options: { 
         responsive: true, 
         maintainAspectRatio: false,
+        animation: {
+          duration: 1000,
+          easing: 'easeOutQuart'
+        },
         plugins: {
           legend: { labels: { color: '#8f9bba' } }
         },
@@ -524,7 +590,13 @@
         data: { 
           datasets: [{ data: [0, 100], backgroundColor: [color, 'rgba(255,255,255,0.05)'], borderWidth: 0 }] 
         },
-        options: { rotation: -135, circumference: 270, cutout: '82%', responsive: true }
+        options: { 
+          rotation: -135, 
+          circumference: 270, 
+          cutout: '82%', 
+          responsive: true,
+          animation: { animateRotate: true, animateScale: true }
+        }
       });
     }
 
@@ -539,7 +611,7 @@
       
       if (statusElem) {
         statusElem.classList.add('connected');
-        statusElem.innerHTML = `<i class="fa-solid fa-circle" style="font-size:0.6rem;"></i> <span>Terhubung</span>`;
+        statusElem.innerHTML = `<div class="live-dot"></div> <span>Terhubung</span>`;
       }
 
       if (data) {
