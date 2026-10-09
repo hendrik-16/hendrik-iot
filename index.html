@@ -3,30 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SKADUTA Hydroponics - Masterpiece Edition</title>
+  <title>SKADUTA Hydroponics - Dashboard</title>
   
   <!-- Font & Icon Libraries -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
     :root {
-      --bg-dark: #030712;
-      --card-bg: rgba(15, 23, 42, 0.65);
-      --card-hover: rgba(30, 41, 59, 0.75);
-      --border-glow: rgba(56, 189, 248, 0.25);
-      --border-active: rgba(56, 189, 248, 0.6);
-      --cyan-glow: #38bdf8;
-      --purple-glow: #a855f7;
-      --emerald-glow: #10b981;
-      --amber-glow: #f59e0b;
-      --rose-glow: #f43f5e;
+      --bg-dark: #090d16;
+      --card-bg: rgba(17, 24, 39, 0.75);
+      --card-hover: rgba(31, 41, 55, 0.85);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-active: rgba(56, 189, 248, 0.35);
+      --primary-cyan: #38bdf8;
+      --primary-emerald: #10b981;
+      --primary-amber: #f59e0b;
       --text-bright: #f8fafc;
       --text-muted: #94a3b8;
-      --glass-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+      --glass-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
     }
 
     * {
@@ -41,235 +39,180 @@
       color: var(--text-bright);
       min-height: 100vh;
       display: flex;
+      padding: 16px; /* Mencegah elemen flush ke pinggir browser */
+      gap: 16px;
       overflow-x: hidden;
-      position: relative;
     }
 
-    /* Canvas Particle Background */
+    /* Ambient Background Halus */
     #particles-canvas {
-      position: absolute;
+      position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
       z-index: 0;
       pointer-events: none;
+      opacity: 0.6;
     }
 
-    /* Ambient Lighting */
-    .light-orb {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(120px);
-      z-index: 0;
-      pointer-events: none;
-      opacity: 0.5;
-      animation: floatAmbient 18s infinite ease-in-out alternate;
-    }
-
-    .orb-a {
-      width: 500px; height: 500px;
-      background: radial-gradient(circle, rgba(56, 189, 248, 0.25), transparent);
-      top: -150px; left: -100px;
-    }
-
-    .orb-b {
-      width: 600px; height: 600px;
-      background: radial-gradient(circle, rgba(168, 85, 247, 0.2), transparent);
-      bottom: -200px; right: -150px;
-      animation-delay: -9s;
-    }
-
-    @keyframes floatAmbient {
-      0% { transform: translate(0, 0) scale(1); }
-      50% { transform: translate(60px, 40px) scale(1.15); }
-      100% { transform: translate(-40px, 70px) scale(0.9); }
-    }
-
-    /* Sidebar Glassmorphism Ultra */
+    /* Sidebar Clean Glass */
     .sidebar {
-      width: 270px;
-      background: rgba(3, 7, 18, 0.75);
-      backdrop-filter: blur(30px);
-      -webkit-backdrop-filter: blur(30px);
-      border-right: 1px solid rgba(255, 255, 255, 0.08);
-      padding: 30px 24px;
+      width: 260px;
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      padding: 24px 20px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       z-index: 10;
       flex-shrink: 0;
+      height: calc(100vh - 32px);
+      position: sticky;
+      top: 16px;
     }
 
     .brand-logo {
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 12px;
     }
 
     .logo-icon-wrap {
-      width: 44px; height: 44px;
-      background: linear-gradient(135deg, var(--cyan-glow), var(--purple-glow));
-      border-radius: 14px;
+      width: 40px; height: 40px;
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid var(--border-active);
+      border-radius: 12px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 1.3rem;
-      box-shadow: 0 0 25px rgba(56, 189, 248, 0.5);
-      animation: logoPulse 3s infinite alternate;
-    }
-
-    @keyframes logoPulse {
-      0% { box-shadow: 0 0 15px rgba(56, 189, 248, 0.4); }
-      100% { box-shadow: 0 0 35px rgba(168, 85, 247, 0.8); }
+      font-size: 1.1rem;
+      color: var(--primary-cyan);
     }
 
     .brand-title {
-      font-weight: 800;
-      font-size: 1.25rem;
-      letter-spacing: 0.5px;
-      background: linear-gradient(135deg, #ffffff, var(--cyan-glow));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      font-weight: 700;
+      font-size: 1.15rem;
+      color: var(--text-bright);
     }
 
     .brand-sub {
       font-size: 0.72rem;
       color: var(--text-muted);
-      letter-spacing: 1px;
-      font-weight: 600;
-      text-transform: uppercase;
+      font-weight: 500;
     }
 
     .nav-menu {
       list-style: none;
-      margin-top: 40px;
+      margin-top: 32px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 8px;
     }
 
     .nav-item a {
       display: flex;
       align-items: center;
-      gap: 16px;
-      padding: 14px 18px;
+      gap: 14px;
+      padding: 12px 16px;
       color: var(--text-muted);
       text-decoration: none;
-      border-radius: 14px;
-      font-size: 0.92rem;
+      border-radius: 12px;
+      font-size: 0.9rem;
       font-weight: 600;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      border: 1px solid transparent;
+      transition: all 0.2s ease;
     }
 
     .nav-item.active a, .nav-item a:hover {
-      background: rgba(56, 189, 248, 0.1);
+      background: rgba(255, 255, 255, 0.05);
       color: var(--text-bright);
-      border-color: rgba(56, 189, 248, 0.3);
-      box-shadow: 0 0 20px rgba(56, 189, 248, 0.15);
-      transform: translateX(5px);
+      border: 1px solid var(--border-subtle);
     }
 
-    .nav-item.active i {
-      color: var(--cyan-glow);
+    .nav-item.active a {
+      color: var(--primary-cyan);
+      background: rgba(56, 189, 248, 0.08);
+      border-color: rgba(56, 189, 248, 0.2);
     }
 
     .sidebar-widget {
-      background: linear-gradient(135deg, rgba(56, 189, 248, 0.1), rgba(168, 85, 247, 0.1));
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 20px;
-      padding: 20px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 16px;
       text-align: center;
-      backdrop-filter: blur(10px);
     }
 
     /* Main Container */
     .main-wrapper {
       flex: 1;
-      padding: 30px 40px;
       display: flex;
       flex-direction: column;
-      gap: 24px;
-      overflow-y: auto;
+      gap: 20px;
       z-index: 2;
     }
 
-    /* Navbar Header */
+    /* Top Bar */
     .top-nav {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      padding: 18px 24px;
     }
 
     .page-title {
-      font-size: 1.5rem;
-      font-weight: 800;
-      letter-spacing: -0.5px;
+      font-size: 1.3rem;
+      font-weight: 700;
     }
 
     .status-badge {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       background: rgba(245, 158, 11, 0.1);
-      border: 1px solid rgba(245, 158, 11, 0.3);
-      padding: 8px 20px;
-      border-radius: 40px;
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: var(--amber-glow);
-      backdrop-filter: blur(10px);
-      transition: all 0.5s ease;
+      border: 1px solid rgba(245, 158, 11, 0.25);
+      padding: 6px 14px;
+      border-radius: 30px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--primary-amber);
     }
 
     .status-badge.connected {
       background: rgba(16, 185, 129, 0.1);
-      border-color: rgba(16, 185, 129, 0.4);
-      color: var(--emerald-glow);
-      box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
+      border-color: rgba(16, 185, 129, 0.25);
+      color: var(--primary-emerald);
     }
 
     .live-dot {
-      width: 10px; height: 10px;
+      width: 8px; height: 8px;
       border-radius: 50%;
       background-color: currentColor;
-      box-shadow: 0 0 10px currentColor;
-      animation: pulseDot 1.5s infinite;
     }
 
-    @keyframes pulseDot {
-      0%, 100% { opacity: 0.3; transform: scale(0.8); }
-      50% { opacity: 1; transform: scale(1.2); }
-    }
-
-    /* Master Cards Grid */
+    /* Cards Grid */
     .cards-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 20px;
+      gap: 16px;
     }
 
     .master-card {
       background: var(--card-bg);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      border: 1px solid var(--border-glow);
-      border-radius: 24px;
-      padding: 24px;
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      padding: 20px;
       box-shadow: var(--glass-shadow);
-      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .master-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0; height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: all 0.25s ease;
     }
 
     .master-card:hover {
-      transform: translateY(-6px) scale(1.01);
       border-color: var(--border-active);
-      box-shadow: 0 20px 40px rgba(56, 189, 248, 0.15);
       background: var(--card-hover);
     }
 
@@ -280,7 +223,7 @@
     }
 
     .card-label {
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       color: var(--text-muted);
       font-weight: 600;
       text-transform: uppercase;
@@ -288,17 +231,16 @@
     }
 
     .card-status-val {
-      font-size: 1.3rem;
-      font-weight: 800;
-      margin-top: 6px;
-      letter-spacing: -0.5px;
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-top: 4px;
     }
 
-    /* Futuristic Switch Slider */
+    /* Sakelar Relay Clean */
     .switch {
       position: relative;
       display: inline-block;
-      width: 56px; height: 30px;
+      width: 48px; height: 26px;
     }
 
     .switch input { opacity: 0; width: 0; height: 0; }
@@ -307,45 +249,49 @@
       position: absolute;
       cursor: pointer;
       top: 0; left: 0; right: 0; bottom: 0;
-      background-color: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      transition: .4s cubic-bezier(0.4, 0, 0.2, 1);
+      background-color: rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--border-subtle);
+      transition: .3s ease;
       border-radius: 34px;
     }
 
     .slider:before {
       position: absolute;
       content: "";
-      height: 22px; width: 22px;
+      height: 18px; width: 18px;
       left: 3px; bottom: 3px;
       background-color: var(--text-muted);
-      transition: .4s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: .3s ease;
       border-radius: 50%;
     }
 
     input:checked + .slider {
-      background: linear-gradient(135deg, var(--cyan-glow), var(--purple-glow));
-      border-color: var(--cyan-glow);
-      box-shadow: 0 0 18px rgba(56, 189, 248, 0.6);
+      background-color: var(--primary-cyan);
+      border-color: var(--primary-cyan);
     }
 
     input:checked + .slider:before {
-      transform: translateX(26px);
+      transform: translateX(22px);
       background-color: #ffffff;
     }
 
-    /* Dashboard Main Grid Layout */
+    /* Main Grid Layout */
     .main-grid {
       display: grid;
       grid-template-columns: 2.2fr 1fr;
-      gap: 24px;
+      gap: 16px;
+    }
+
+    .section-title {
+      font-size: 1.05rem;
+      font-weight: 700;
     }
 
     .chart-box {
       position: relative;
       width: 100%;
-      height: 300px;
-      margin-top: 20px;
+      height: 280px;
+      margin-top: 16px;
     }
 
     /* Gauge & Monitoring Box */
@@ -353,12 +299,12 @@
       display: flex;
       justify-content: space-around;
       align-items: center;
-      margin-top: 20px;
+      margin-top: 16px;
     }
 
     .gauge-item {
       position: relative;
-      width: 150px;
+      width: 140px;
       text-align: center;
     }
 
@@ -366,50 +312,44 @@
       position: absolute;
       bottom: 12%; left: 50%;
       transform: translateX(-50%);
-      font-size: 1.35rem;
-      font-weight: 800;
-      letter-spacing: -0.5px;
+      font-size: 1.2rem;
+      font-weight: 700;
     }
 
     .info-list {
       display: flex;
       flex-direction: column;
-      gap: 14px;
-      margin-top: 15px;
-      font-size: 0.9rem;
+      gap: 12px;
+      margin-top: 16px;
+      font-size: 0.88rem;
     }
 
     .info-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding-bottom: 10px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-subtle);
     }
 
-    /* Responsive Breakdown */
-    @media (max-width: 1100px) {
+    /* Responsive */
+    @media (max-width: 1024px) {
       .main-grid { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 768px) {
-      body { flex-direction: column; }
-      .sidebar { width: 100%; padding: 20px; }
+      body { flex-direction: column; padding: 12px; }
+      .sidebar { width: 100%; height: auto; position: relative; top: 0; }
       .nav-menu, .sidebar-widget { display: none; }
-      .main-wrapper { padding: 20px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Background Particle Animation -->
+  <!-- Background Particle -->
   <canvas id="particles-canvas"></canvas>
 
-  <!-- Ambient Light Orbs -->
-  <div class="light-orb orb-a"></div>
-  <div class="light-orb orb-b"></div>
-
-  <!-- Sidebar Ultra Glass -->
+  <!-- Sidebar -->
   <aside class="sidebar">
     <div>
       <div class="brand-logo">
@@ -429,19 +369,19 @@
     </div>
 
     <div class="sidebar-widget">
-      <i class="fa-solid fa-droplet" style="font-size:1.8rem; color:var(--cyan-glow); margin-bottom:8px;"></i>
-      <div style="font-size:0.85rem; font-weight:700;">Hydroponic Master</div>
-      <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">Realtime Firebase System</div>
+      <i class="fa-solid fa-droplet" style="font-size:1.5rem; color:var(--primary-cyan); margin-bottom:6px;"></i>
+      <div style="font-size:0.82rem; font-weight:700;">Hydroponic System</div>
+      <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">Realtime Firebase</div>
     </div>
   </aside>
 
-  <!-- Main Content Wrapper -->
+  <!-- Main Content -->
   <main class="main-wrapper">
     
-    <!-- Top Bar Navigation -->
+    <!-- Header -->
     <header class="top-nav">
       <div>
-        <div style="font-size:0.82rem; color:var(--text-muted); text-transform:uppercase; font-weight:700; letter-spacing:1px;">System Panel</div>
+        <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; font-weight:600;">System Panel</div>
         <h1 class="page-title">Hidroponik Control Dashboard</h1>
       </div>
       <div class="status-badge" id="db-status">
@@ -450,7 +390,10 @@
       </div>
     </header>
 
-    <!-- Master Relay Switch Grid -->
+    <!-- H2 Utama untuk Struktur Aksesibilitas SEO / Heading yang Tepat -->
+    <h2 class="section-title" style="margin-top: 4px;">Kontrol Relay Pompa</h2>
+
+    <!-- Relay Cards -->
     <section class="cards-grid">
       <div class="master-card">
         <div class="card-header-flex">
@@ -505,17 +448,19 @@
       </div>
     </section>
 
-    <!-- Dashboard Main Content Grid -->
+    <h2 class="section-title" style="margin-top: 4px;">Monitoring Telemetri Sensor</h2>
+
+    <!-- Section Main Grid -->
     <section class="main-grid">
       
-      <!-- Line Chart Analytics -->
+      <!-- Line Chart Card -->
       <div class="master-card">
         <div style="display:flex; justify-content:space-between; align-items:center;">
           <div>
-            <h3 style="font-size:1.1rem; font-weight:800;">Grafik Sensor Realtime</h3>
-            <p style="font-size:0.8rem; color:var(--cyan-glow); font-weight:600; margin-top:2px;">Monitoring Telemetri pH & TDS</p>
+            <h3 style="font-size:1rem; font-weight:700;">Grafik Sensor Realtime</h3>
+            <p style="font-size:0.78rem; color:var(--text-muted); font-weight:500;">Telemetri pH & TDS (PPM)</p>
           </div>
-          <div style="width:40px; height:40px; background:rgba(56, 189, 248, 0.1); border-radius:12px; display:flex; align-items:center; justify-content:center; color:var(--cyan-glow);">
+          <div style="width:36px; height:36px; background:rgba(255, 255, 255, 0.05); border-radius:10px; display:flex; align-items:center; justify-content:center; color:var(--primary-cyan);">
             <i class="fa-solid fa-wave-square"></i>
           </div>
         </div>
@@ -524,39 +469,39 @@
         </div>
       </div>
 
-      <!-- Gauge Arc & System Status -->
-      <div style="display:flex; flex-direction:column; gap:24px;">
+      <!-- Gauge & Info Cards -->
+      <div style="display:flex; flex-direction:column; gap:16px;">
         
         <div class="master-card">
-          <h3 style="font-size:1.05rem; font-weight:800;">Nilai Sensor Aktif</h3>
+          <h3 style="font-size:1rem; font-weight:700;">Nilai Sensor Aktif</h3>
           <div class="gauge-wrapper-flex">
             <div class="gauge-item">
-              <div style="font-size:0.8rem; color:var(--text-muted); font-weight:600; margin-bottom:8px;">pH Air</div>
+              <div style="font-size:0.78rem; color:var(--text-muted); font-weight:600; margin-bottom:6px;">pH Air</div>
               <canvas id="phGauge"></canvas>
-              <div class="gauge-number" id="phText" style="color:var(--cyan-glow);">0.0</div>
+              <div class="gauge-number" id="phText" style="color:var(--primary-cyan);">0.0</div>
             </div>
             <div class="gauge-item">
-              <div style="font-size:0.8rem; color:var(--text-muted); font-weight:600; margin-bottom:8px;">TDS (PPM)</div>
+              <div style="font-size:0.78rem; color:var(--text-muted); font-weight:600; margin-bottom:6px;">TDS (PPM)</div>
               <canvas id="tdsGauge"></canvas>
-              <div class="gauge-number" id="tdsText" style="color:var(--amber-glow);">0</div>
+              <div class="gauge-number" id="tdsText" style="color:var(--primary-amber);">0</div>
             </div>
           </div>
         </div>
 
         <div class="master-card">
-          <h3 style="font-size:1.05rem; font-weight:800;">Status Telemetri</h3>
+          <h3 style="font-size:1rem; font-weight:700;">Status Telemetri</h3>
           <div class="info-list">
             <div class="info-row">
               <span style="color:var(--text-muted);">Waktu Sinkron:</span>
-              <strong id="last-update" style="font-size:0.95rem;">-</strong>
+              <strong id="last-update" style="font-size:0.9rem;">-</strong>
             </div>
             <div class="info-row">
               <span style="color:var(--text-muted);">Kondisi pH:</span>
-              <strong id="ph-status" style="color:var(--cyan-glow);">Optimal</strong>
+              <strong id="ph-status" style="color:var(--primary-cyan);">Optimal</strong>
             </div>
             <div class="info-row">
               <span style="color:var(--text-muted);">Kondisi TDS:</span>
-              <strong id="tds-status" style="color:var(--amber-glow);">Optimal</strong>
+              <strong id="tds-status" style="color:var(--primary-amber);">Optimal</strong>
             </div>
           </div>
         </div>
@@ -567,7 +512,7 @@
 
   </main>
 
-  <!-- Animated Interactive Mesh Particle Background Script -->
+  <!-- Particle Effect Script -->
   <script>
     const canvas = document.getElementById('particles-canvas');
     const ctx = canvas.getContext('2d');
@@ -584,9 +529,9 @@
       constructor() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
-        this.vx = (Math.random() - 0.5) * 0.4;
-        this.vy = (Math.random() - 0.5) * 0.4;
-        this.radius = Math.random() * 1.5 + 1;
+        this.vx = (Math.random() - 0.5) * 0.3;
+        this.vy = (Math.random() - 0.5) * 0.3;
+        this.radius = 1.2;
       }
       update() {
         this.x += this.vx;
@@ -597,12 +542,12 @@
       draw() {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(56, 189, 248, 0.25)';
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
         ctx.fill();
       }
     }
 
-    for (let i = 0; i < 45; i++) particles.push(new Particle());
+    for (let i = 0; i < 30; i++) particles.push(new Particle());
 
     function animateParticles() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -612,12 +557,11 @@
         for (let j = index + 1; j < particles.length; j++) {
           const p2 = particles[j];
           const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
-          if (dist < 120) {
+          if (dist < 100) {
             ctx.beginPath();
             ctx.moveTo(p.x, p.y);
             ctx.lineTo(p2.x, p2.y);
-            ctx.strokeStyle = `rgba(56, 189, 248, ${0.12 - dist / 1000})`;
-            ctx.lineWidth = 0.8;
+            ctx.strokeStyle = `rgba(255, 255, 255, ${0.05 - dist / 2000})`;
             ctx.stroke();
           }
         }
@@ -627,12 +571,11 @@
     animateParticles();
   </script>
 
-  <!-- Firebase JS SDK Integration -->
+  <!-- Firebase Integration -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-    // Konfigurasi Firebase Milikmu
     const firebaseConfig = {
       apiKey: "AIzaSyBrhYFBHJkCgH0xyxTv5dr8nOrO99SOzQs",
       authDomain: "smart-agriculture-hendrik.firebaseapp.com",
@@ -646,23 +589,17 @@
     const app = initializeApp(firebaseConfig);
     const database = getDatabase(app);
 
-    // Toggle Relay Control
     window.toggleRelay = function (relayId, isChecked) {
       set(ref(database, 'agriculture_iot/relays/' + relayId), isChecked)
         .then(() => console.log(`Berhasil update ${relayId}: ${isChecked}`))
         .catch(error => console.error("Error update relay:", error));
     };
 
-    // Chart.js Line Chart with Masterpiece Gradient Area
     const ctxGraph = document.getElementById('sensorGraph').getContext('2d');
     
-    const gradCyan = ctxGraph.createLinearGradient(0, 0, 0, 300);
-    gradCyan.addColorStop(0, 'rgba(56, 189, 248, 0.45)');
+    const gradCyan = ctxGraph.createLinearGradient(0, 0, 0, 280);
+    gradCyan.addColorStop(0, 'rgba(56, 189, 248, 0.25)');
     gradCyan.addColorStop(1, 'rgba(56, 189, 248, 0.0)');
-
-    const gradAmber = ctxGraph.createLinearGradient(0, 0, 0, 300);
-    gradAmber.addColorStop(0, 'rgba(245, 158, 11, 0.35)');
-    gradAmber.addColorStop(1, 'rgba(245, 158, 11, 0.0)');
 
     const sensorChart = new Chart(ctxGraph, {
       type: 'line',
@@ -676,35 +613,26 @@
             backgroundColor: gradCyan,
             fill: true,
             yAxisID: 'yPh', 
-            tension: 0.45,
-            borderWidth: 3,
-            pointBackgroundColor: '#38bdf8',
-            pointBorderColor: '#ffffff',
-            pointRadius: 4,
-            pointHoverRadius: 8
+            tension: 0.4,
+            borderWidth: 2,
+            pointRadius: 3
           },
           { 
             label: 'TDS (PPM)', 
             data: [], 
             borderColor: '#f59e0b', 
-            backgroundColor: gradAmber,
-            fill: true,
             yAxisID: 'yTds', 
-            tension: 0.45,
-            borderWidth: 3,
-            pointBackgroundColor: '#f59e0b',
-            pointBorderColor: '#ffffff',
-            pointRadius: 4,
-            pointHoverRadius: 8
+            tension: 0.4,
+            borderWidth: 2,
+            pointRadius: 3
           }
         ]
       },
       options: { 
         responsive: true, 
         maintainAspectRatio: false,
-        animation: { duration: 1000, easing: 'easeOutQuart' },
         plugins: {
-          legend: { labels: { color: '#94a3b8', font: { family: 'Plus Jakarta Sans', weight: '600' } } }
+          legend: { labels: { color: '#94a3b8', font: { family: 'Plus Jakarta Sans' } } }
         },
         scales: {
           x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#94a3b8' } },
@@ -714,7 +642,6 @@
       }
     });
 
-    // Custom Gauge Doughnut Chart
     function createGauge(elementId, color) {
       return new Chart(document.getElementById(elementId).getContext('2d'), {
         type: 'doughnut',
@@ -724,9 +651,8 @@
         options: { 
           rotation: -135, 
           circumference: 270, 
-          cutout: '84%', 
-          responsive: true,
-          animation: { animateRotate: true }
+          cutout: '80%', 
+          responsive: true 
         }
       });
     }
@@ -734,7 +660,6 @@
     const phGaugeChart = createGauge('phGauge', '#38bdf8');
     const tdsGaugeChart = createGauge('tdsGauge', '#f59e0b');
 
-    // Realtime Listener Firebase
     const iotRef = ref(database, 'agriculture_iot');
     onValue(iotRef, (snapshot) => {
       const data = snapshot.val();
@@ -742,13 +667,12 @@
       
       if (statusElem) {
         statusElem.classList.add('connected');
-        statusElem.innerHTML = `<div class="live-dot"></div> <span>Sistem Terhubung</span>`;
+        statusElem.innerHTML = `<div class="live-dot"></div> <span>Terhubung</span>`;
       }
 
       if (data) {
         const timeNow = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
-        // Update pH
         if (data.ph !== undefined) {
           const ph = parseFloat(data.ph);
           document.getElementById('phText').innerText = ph.toFixed(2);
@@ -756,7 +680,6 @@
           phGaugeChart.update();
         }
 
-        // Update TDS
         if (data.tds !== undefined) {
           const tds = parseFloat(data.tds);
           document.getElementById('tdsText').innerText = Math.round(tds);
@@ -764,7 +687,6 @@
           tdsGaugeChart.update();
         }
 
-        // Update Line Chart Sync
         if (data.ph !== undefined && data.tds !== undefined) {
           sensorChart.data.labels.push(timeNow);
           sensorChart.data.datasets[0].data.push(parseFloat(data.ph));
@@ -780,7 +702,6 @@
 
         document.getElementById('last-update').innerText = timeNow;
 
-        // Sync Relay Status
         if (data.relays) {
           for (let i = 1; i <= 4; i++) {
             const rToggle = document.getElementById('relay' + i);
@@ -789,8 +710,8 @@
               const state = data.relays['relay' + i];
               rToggle.checked = state;
               if (rText) {
-                rText.innerText = state ? 'AKTIF' : 'NONAKTIF';
-                rText.style.color = state ? 'var(--cyan-glow)' : 'var(--text-muted)';
+                rText.innerText = state ? 'ON' : 'OFF';
+                rText.style.color = state ? 'var(--primary-cyan)' : 'var(--text-muted)';
               }
             }
           }
